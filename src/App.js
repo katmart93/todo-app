@@ -5,13 +5,23 @@ import "./App.css";
 function App() {
   const [inputValue, setInputValue] = useState("");
 
-  // with strict mode in index.js; don't use the useEffect with getItem then, use this use state instead:
+  // with strict mode in index.js; don't use the useEffect with getItem then, use this useState instead:
   /* const [todos, setTodos] = useState(
   JSON.parse(localStorage.getItem("TODO_APP")) || []
   ); */
 
   // without strict mode in index.js
   const [todos, setTodos] = useState([]);
+
+  // without strict mode in index.js
+  useEffect(() => {
+    const localData = localStorage.getItem("TODO_APP");
+    if (localData !== null) setTodos(JSON.parse(localData));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("TODO_APP", JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = (e) => {
     e.preventDefault();
@@ -30,16 +40,6 @@ function App() {
   const removeTodo = (id) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
-
-  // without strict mode in index.js
-  useEffect(() => {
-    const localData = localStorage.getItem("TODO_APP");
-    if (localData !== null) setTodos(JSON.parse(localData));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("TODO_APP", JSON.stringify(todos));
-  }, [todos]);
 
   return (
     <div className="App">
